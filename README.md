@@ -17,7 +17,7 @@ R is customized for specific functions using libraries or packages.  In this cla
 install.packages('pacman')
 
 # Use pacman to install other libraries)
-pacman::p_load(ggplot2, ggthemes, stringi, stringr, tm, qdapRegex, dplyr, tidyverse, igraph, networkD3, wordcloud, RColorBrewer, ggwordcloud, wordcloud2, echarts4r, plotrix, gplots, tidytext, radarchart, textdata, tidyr, lubridate, tm # displays the emojis correctly, emoji # Get the emoji lexicon or load one manually, emojifont # another emoji  to explore, textclean #another one!, mgsub #used for substitutions, qdap #emoticons functions, sentimentr, lexicon #lexicon::available_data, SentimentAnalysis, httr, jsonlite, vtreat, ModelMetrics, MLmetrics, pROC, text2vec, caret, glmnet, lsa, yardstick, cluster, factoextra, clue, kmed, skmeans, irlba, lexicon, plyr, sylcount)
+pacman::p_load(ggplot2, ggthemes, stringi, stringr, tm, qdapRegex, dplyr, tidyverse, igraph, networkD3, wordcloud, RColorBrewer, ggwordcloud, wordcloud2, echarts4r, plotrix, gplots, tidytext, radarchart, textdata, tidyr, lubridate, tm # displays the emojis correctly, emoji # Get the emoji lexicon or load one manually, emojifont # another emoji  to explore, textclean #another one!, mgsub #used for substitutions, qdap #emoticons functions, sentimentr, lexicon, SentimentAnalysis, httr, jsonlite, vtreat, ModelMetrics, MLmetrics, pROC, text2vec, caret, glmnet, lsa, yardstick, cluster, factoextra, clue, kmed, skmeans, irlba, lexicon, plyr, sylcount)
 
 ```
 
