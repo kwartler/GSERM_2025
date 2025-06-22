@@ -5,12 +5,12 @@ GSERM St Gallen 2025 June
 
 This course requires [R](https://cran.r-project.org/), [R-studio](https://posit.co/download/rstudio-desktop/) both freely available.
 
-Additionally, at times we will explore programmatic requests to "local LLMs". This requires [Jan AI](https://jan.ai/). 
+Additionally, at times we will explore programmatic requests to "local LLMs". This requires [LM-Studio](https://lmstudio.ai/) or if you have an intel Mac [Jan AI](https://jan.ai/) . 
 *Students with older computers, old GPUs or a small amount of RAM, may not be able to execute this portion of the lesson*
 
 ### Packages for R
 
-R is customized for specific functions using libraries or packages.  In this class we will use the following packages.  Once you have R and R studio installed run the following command in your console.  Don't worry if you struggle, on day 1 we will set aside time to help though we aren't performing technical support.
+R is customized for specific functions using libraries or packages.  In this class we will use the following packages.  Once you have R and R studio installed run the following command in your console.  Don't worry if you struggle, on day 1 we will set aside time to help though we aren't performing technical support if you don't have administrative access to your computer etc.
 
 ```
 # Install library pacman
