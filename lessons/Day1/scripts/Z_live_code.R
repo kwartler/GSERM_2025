@@ -28,8 +28,10 @@ head(text)
 # Create a DTM and change it to a simple matrix
 
 # Find the column names that have "mug" anchored within grep within the DTM
+mugColumns
 
 # Review the first 6 rows and the index of "mug" previously created
+DTMmatrix[_:_,mugColumns]
 
 # Compare the 4th tweet in the original text to the content() of the 4th cleaned corpus doc
 

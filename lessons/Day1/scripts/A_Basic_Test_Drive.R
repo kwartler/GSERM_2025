@@ -103,11 +103,11 @@ dataDF[1,2] #by index row 1, column 2
 
 ## Extract from R to a file; object to save then path, otherwise will go to working directory (fruit basket)
 # Windows slashes are backwards!
-savePath <- '~/Desktop/GSERM_2024/personalFiles/example.csv'
+savePath <- '~/Desktop/GSERM_2025/personalFiles/example.csv'
 write.csv(dataDF,savePath, row.names=F)
 
 ## Read in a file as an object; just path
-newDF<-read.csv("~/Desktop/GSERM_2024/personalFiles/example.csv")
+newDF<-read.csv("~/Desktop/GSERM_2025/personalFiles/example.csv")
 
 # Examine & Compare to original
 newDF
