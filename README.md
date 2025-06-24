@@ -26,3 +26,8 @@ pacman::p_load(ggplot2, ggthemes, stringi, stringr, tm, qdapRegex, dplyr, tidyve
 - Day 3: Sentiment Analysis & Machine Learning: Document Classification & Clustering
 - Day 4: Introduction to Large Language Models
 - Day 5: Effective Prompt Engineering, vector databases and RAG models; FINAL EXAM
+
+
+### Ethics Paper
+
+Please watch this Youtube [video](https://www.youtube.com/watch?v=zKCynxiV_8I&ab_channel=TaylorLorenz).  Its about 40min long but speaks to the growing role AI is playing in shaping our perspectives.  Please write a ~500-750 word essay summarizing the video and reflecting on what can be done to address these issues. **Revised due date July 7, 2025, midnight EST**  You may turn it in at <edwardkwartler@fas.harvard.edu>.
