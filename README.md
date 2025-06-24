@@ -24,8 +24,8 @@ pacman::p_load(ggplot2, ggthemes, stringi, stringr, tm, qdapRegex, dplyr, tidyve
 - Day 1: R Basics & Introduction to NLP #
 - Day 2: Visualizations in text mining #
 - Day 3: Sentiment Analysis & Machine Learning: Document Classification & Clustering
-- Day 4: Introduction to Large Language Models
-- Day 5: Effective Prompt Engineering, vector databases and RAG models; FINAL EXAM
+- Day 4: Introduction to Large Language Models, Effective Prompt Engineering,
+- Day 5: Vector databases and RAG models; FINAL EXAM
 
 
 ### Ethics Paper
