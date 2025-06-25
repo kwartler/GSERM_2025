@@ -21,7 +21,6 @@ dataLLM <- list(
   messages = list(
     # System message defines the AI's persona
     list(role = "system", content = "You are a helpful, smart, kind, and efficient AI assistant. You always fulfill the user's requests to the best of your ability.Summarize the following text in approximately 3 sentences, focusing on the main concepts.  Do not produce more than 3 sentences in your response.  Here is the text to summarize:\n"),
-    # User message contains the summarization instruction and the text to summarize
     list(role = "user", content = articleTxt)),
   temperature = 0.7, 
   max_tokens = 256,  

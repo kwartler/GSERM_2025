@@ -1,0 +1,10 @@
+# Example prompts
+1. What is the captial of Brazil?
+2. Tell me 5 comedy TV shows or movies I will like.
+3. I like Arrested Development and Parks and Rec.  I hate Saw and American Horror.  Please recommend 5 TV shows or movies.
+
+## Chain of Thought example and contrast
+4. Question: The cafeteria had 23 apples. If they used 20 to make lunch and bought 6 more, how many apples do they have?  Please explain your logic in steps.
+Contast
+4a. The cafeteria had 23 apples. If they used 20 to make lunch and bought 6 more, how many apples do they have? Dont give me any information except the answer.
+

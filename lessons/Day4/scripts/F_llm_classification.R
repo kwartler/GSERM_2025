@@ -6,24 +6,56 @@
 # Libraries
 library(httr)
 library(jsonlite)
-library(supportR)
+library(pbapply)
 
-# Inputs
-articleTxt <- readLines('https://raw.githubusercontent.com/kwartler/teaching-datasets/refs/heads/main/Summarization%20News%20Article%20-%20Playing%20%E2%80%98whack-a-mole%E2%80%99%20with%20Meta%20over%20my%20fraudulent%20avatars.txt')
-articleTxt <- paste(articleTxt, collapse = ' ')
 
+# Obtain all the forum posts from the teaching data repo
+# You would point this to your corpus 
+urlA <- paste0('https://raw.githubusercontent.com/kwartler/teaching-datasets/refs/heads/main/doc_class_examples/',
+               101600:101609,
+               '.txt')
+urlB <- paste0('https://raw.githubusercontent.com/kwartler/teaching-datasets/refs/heads/main/doc_class_examples/', 
+               54110:54119,
+               '.txt')
+allFilesURLS <- c(urlA, urlB)
+allFiles <- pblapply(allFilesURLS, readLines)
+allFiles[[1]]
+
+# So we must collapse each document from lines to one string but 
+# not collapse them into a single document
+allFiles <- lapply(allFiles, paste, collapse = '\n')
+cat(allFiles[[1]])
+
+# Let's make a custom system instruction
+sysPrompt <- 'You are a document classifier.  You review text and assign specific attributes to the document. You must assign one of following tags that best describes the topic of the text.  Here are your options for document classification:\n
+- Technology
+- Entertainment
+- Politics
+- Finance
+- Health
+- Travel
+- Food
+- Music
+- Movies
+- Gaming
+- Fashion
+- Education
+- Business
+- Environment
+- Science\n\nYou will only respond with the single classification that BEST describes the text.  You will not add any additional information or commentary.  For example, after reviewing a body of text you would simple state:\n\nEducation\n\nHere is text to review and classify:\n\n'
 # Specify the LLM model to use, assuming it's available in lm-studio
-llmModel <- 'llama-3.2-1b-instruct'
+
+# Model name
+llmModel <- 'llama-3.2-1b-instruct' #qwen2.5-7b-instruct
 
 # Organize the request payload for the LLM API
 dataLLM <- list(
   model = llmModel,
   messages = list(
     # System message defines the AI's persona
-    list(role = "system", content = "You are a helpful, smart, kind, and efficient AI assistant. You always fulfill the user's requests to the best of your ability.Summarize the following text in approximately 3 sentences, focusing on the main concepts.  Do not produce more than 3 sentences in your response.  Here is the text to summarize:\n"),
-    # User message contains the summarization instruction and the text to summarize
-    list(role = "user", content = articleTxt)),
-  temperature = 0.7, 
+    list(role = "system", content = sysPrompt),
+    list(role = "user", content = allFiles[[1]])),
+  temperature = 0, # change the temp to see the variability at work
   max_tokens = 256,  
   stream = FALSE)
 
@@ -39,34 +71,37 @@ res <- httr::POST(url = "http://localhost:1234/v1/chat/completions",
 llmResponse <- httr::content(res)$choices[[1]]$message$content
 cat(llmResponse)
 
-# Calculate the summarization quality metric using stringsim with Jaccard method
-jaccardSim <- stringsim(articleTxt, llmResponse, method = 'jaccard', q = 1)
-jaccardSim
+#  Now we can run it across all documents
+docClasses <- list()
+for(i in 1:length(allFiles)){
+  print(i)
+  dataLLM <- list(
+    model = llmModel,
+    messages = list(
+      # System message defines the AI's persona
+      list(role = "system", content = sysPrompt),
+      list(role = "user", content = allFiles[[i]])),
+    temperature = 0, 
+    max_tokens = 256,  
+    stream = FALSE)
+  
+  # Request header specifies the content type as JSON
+  headers <- c(`Content-Type` = "application/json")
+  
+  # Make the POST request to the local lm-studio API endpoint
+  res <- httr::POST(url = "http://localhost:1234/v1/chat/completions",
+                    httr::add_headers(.headers = headers),
+                    body = toJSON(dataLLM, auto_unbox = TRUE))
+  
+  # Extract the generated summary from the response
+  llmResponse <- httr::content(res)$choices[[1]]$message$content
+  docClasses[[i]] <- data.frame(urlFile = allFilesURLS[i],
+                                llmClassification = llmResponse)
+}
 
-# We can try a more sophisticated model for comparison.
-llmModel <- 'qwen2.5-7b-instruct'
-dataLLM <- list(
-  model = llmModel,
-  messages = list(
-    # System message defines the AI's persona
-    list(role = "system", content = "You are a helpful, smart, kind, and efficient AI assistant. You always fulfill the user's requests to the best of your ability.Summarize the following text in approximately 3 sentences, focusing on the main concepts.  Do not produce more than 3 sentences in your response.  Here is the text to summarize:\n"),
-    # User message contains the summarization instruction and the text to summarize
-    list(role = "user", content = articleTxt)),
-  temperature = 0.7, 
-  max_tokens = 256,  
-  stream = FALSE)
-
-# Make the POST request to the local lm-studio API endpoint
-res <- httr::POST(url = "http://localhost:1234/v1/chat/completions",
-                  httr::add_headers(.headers = headers),
-                  body = toJSON(dataLLM, auto_unbox = TRUE))
-
-# Extract the generated summary from the response
-llmResponse2 <- httr::content(res)$choices[[1]]$message$content
-cat(llmResponse2)
-
-# The bigger model may score lower because it followed directions and used the right number of sentences.  This is more concise but is a trade off.
-jaccardSim2 <- stringsim(articleTxt, llmResponse2, method = 'jaccard', q = 1)
-jaccardSim2
+# Now organize into a data frame
+docClassesDF <- do.call(rbind, docClasses)
+head(docClassesDF)
+table(docClassesDF$llmClassification)
 
 # End
