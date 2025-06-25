@@ -75,8 +75,16 @@ bingSent
 
 # Quick Analysis - count of words
 bingResults <- aggregate(count~document+sentiment, bingSent, sum)
-bingResults <- pivot_wider(bingResults, names_from = document, values_from = count)
-as.data.frame(bingResults)
+#bingResults <- pivot_wider(bingResults, names_from = document, values_from = count)
+#as.data.frame(bingResults)
+
+# If I want I can adjust to understand the density of these words among each document
+totalWords <- aggregate(count~document, allText, sum)
+totalWords
+bingResults %>% left_join(totalWords, by = "document") %>%
+  mutate(proportion = count.x / count.y) 
+
+
 
 # Get afinn lexicon
 afinn <- get_sentiments(lexicon = c("afinn")) 
