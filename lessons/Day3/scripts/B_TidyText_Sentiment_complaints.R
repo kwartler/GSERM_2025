@@ -158,7 +158,7 @@ posNegMonth$month <- factor(posNegMonth$month, levels = month.abb)
 ggplot(posNegMonth, aes(x = month, y = proportion, color = topic, group = interaction(topic, sentiment))) +
   geom_line() +  
   geom_point() + 
-  theme_minimal()
+  theme_minimal() + facet_wrap(~sentiment+topic, scales = 'free_y')
 
 # Finally let's explore as a radar chart using NRC
 nrc <- lexicon_nrc()
