@@ -84,15 +84,10 @@ totalWords
 bingResults %>% left_join(totalWords, by = "document") %>%
   mutate(proportion = count.x / count.y) 
 
-
-
 # Get afinn lexicon
 afinn <- get_sentiments(lexicon = c("afinn")) 
 afinn
 
-# Word Sequence
-allText$idx       <- as.numeric(ave(allText$document, 
-                                    allText$document, FUN=seq_along))
 # Perform Inner Join
 afinnSent <- inner_join(allText,
                         afinn, 
@@ -105,6 +100,18 @@ afinnSent
 
 # Get nrc lexicon,notice that some words can have multiple sentiments
 nrc <- lexicon_nrc()
+
+# Alternatively you can download it here
+nrc <- read.csv('https://raw.githubusercontent.com/kwartler/teaching-datasets/refs/heads/main/nrc.csv')
+
+# Add some terms
+tmp <- data.frame(word = c('lol', 'lol'),
+                  sentiment = c('joy','trust'))
+nrc <- rbind(nrc, tmp)
+
+# Drop some terms
+drops <- grep('abacus|\\babandon\\b', nrc$word)
+nrc <- nrc[-drops,]
 
 # Perform Inner Join
 nrcSent <- inner_join(allText,
