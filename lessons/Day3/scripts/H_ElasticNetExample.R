@@ -98,7 +98,7 @@ nrow(bestTerms)
 ncol(diabetesDTM)
 
 # What are some impacting terms
-# Updated versions of glmnet use s0 not s1 below
+## Updated versions of glmnet use s0 not s1 below
 head(bestTerms[order(bestTerms$s1, decreasing = T),])
 head(bestTerms[order(bestTerms$s1, decreasing = F),])
 
