@@ -1,12 +1,12 @@
 #' Author: Ted Kwartler (Modified by Gemini)
 #' Date: June 23, 2025
-#' Description: An R script to perform text summarization using a local LLM
+#' Description: An R script to perform text classification using a local LLM
 #'              (via lm-studio)
 
 # Libraries
 library(httr)
 library(jsonlite)
-library(stringdist) # has stringsim() 
+library(supportR)
 
 # Inputs
 articleTxt <- readLines('https://raw.githubusercontent.com/kwartler/teaching-datasets/refs/heads/main/Summarization%20News%20Article%20-%20Playing%20%E2%80%98whack-a-mole%E2%80%99%20with%20Meta%20over%20my%20fraudulent%20avatars.txt')
