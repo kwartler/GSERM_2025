@@ -11,6 +11,7 @@ library(emojifont) # another emoji library to explore
 library(textclean) #another one!
 library(mgsub) #used for substitutions
 library(qdapRegex)
+library(qdapDictionaries)
 #library(qdap) #emoticons functions
 
 # Examine built in lexicon
