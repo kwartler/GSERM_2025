@@ -162,7 +162,9 @@ ggplot(posNegMonth, aes(x = month, y = proportion, color = topic, group = intera
 
 # Finally let's explore as a radar chart using NRC
 nrc <- lexicon_nrc()
-# not the tidy workflow; get_nrc_sentiment()
+# not the tidy workflow; syuzhet::get_nrc_sentiment()
+# Alternatively you can download it here
+nrc <- read.csv('https://raw.githubusercontent.com/kwartler/teaching-datasets/refs/heads/main/nrc.csv')
 
 # Inner join on the list
 x <- lapply(cleanMonthlyTibbles, inner_join, nrc, by = c('term' = 'word'))
