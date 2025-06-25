@@ -77,7 +77,7 @@ dim(diabetesDTM)
 #train text only model
 textFit <- cv.glmnet(diabetesDTM,
                      y=as.factor(trainDiabetesTxt$readmitted),
-                     alpha=0.9,
+                     alpha=1,
                      family='binomial',
                      type.measure='auc',
                      nfolds=5,
@@ -98,6 +98,7 @@ nrow(bestTerms)
 ncol(diabetesDTM)
 
 # What are some impacting terms
+# Updated versions of glmnet use s0 not s1 below
 head(bestTerms[order(bestTerms$s1, decreasing = T),])
 head(bestTerms[order(bestTerms$s1, decreasing = F),])
 
