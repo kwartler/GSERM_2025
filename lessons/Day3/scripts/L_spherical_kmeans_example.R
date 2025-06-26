@@ -109,7 +109,7 @@ clusterTerms$cluster_2
 clusterTerms$cluster_3
 
 # Coincidentally this structure works with comparison cloud
-comparison.cloud(protoTypical[,2:4],
+comparison.cloud(protoTypical[,1:3],
                  max.words=150,
                  random.order=FALSE,
                  title.size=1,
