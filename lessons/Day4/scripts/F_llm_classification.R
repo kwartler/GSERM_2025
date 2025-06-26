@@ -28,25 +28,14 @@ cat(allFiles[[1]])
 
 # Let's make a custom system instruction
 sysPrompt <- 'You are a document classifier.  You review text and assign specific attributes to the document. You must assign one of following tags that best describes the topic of the text.  Here are your options for document classification:\n
-- Technology
+- Science & Technology
 - Entertainment
-- Politics
-- Finance
-- Health
-- Travel
-- Food
-- Music
-- Movies
-- Gaming
-- Fashion
-- Education
-- Business
-- Environment
-- Science\n\nYou will only respond with the single classification that BEST describes the text.  You will not add any additional information or commentary.  For example, after reviewing a body of text you would simple state:\n\nEducation\n\nHere is text to review and classify:\n\n'
+- Automotive
+- News\n\nYou will only respond with the single classification that BEST describes the text.  You will not add any additional information or commentary.  For example, after reviewing a body of text you would simple state:\n\nEducation\n\nHere is text to review and classify:\n\n'
 # Specify the LLM model to use, assuming it's available in lm-studio
 
 # Model name
-llmModel <- 'llama-3.2-1b-instruct' #qwen2.5-7b-instruct
+llmModel <- 'qwen2.5-7b-instruct' #'llama-3.2-1b-instruct' #qwen2.5-7b-instruct
 
 # Organize the request payload for the LLM API
 dataLLM <- list(
