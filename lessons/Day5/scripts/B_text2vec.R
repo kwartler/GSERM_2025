@@ -70,10 +70,15 @@ vectorizer <- vocab_vectorizer(textVocab)
 textTCM <- create_tcm(iterMaker, vectorizer, skip_grams_window = 5L)
 dim(textTCM)
 
+# Let's find a portion and review
+idxCol <- which(textTCM[1, ] != 0)[1]
+textTCM[1:5, (idxCol-1):(idxCol+4)]
+textTCM["famous", "hidden"]
+
 # Fit the GloVe model
 glove      <- GlobalVectors$new(rank = 50,x_max = 10)
 gloveModel <- glove$fit_transform(textTCM, n_iter = 15)
-# Note that model learns two sets of word vectors - main [definition] and context
+# Note that model learns two sets of word vectors - center [main definition] and context
 # It usually is a better (idea from GloVe paper) to average or take a sum of main and context vector:
 wordVectors <- gloveModel + t(glove$components)
 
