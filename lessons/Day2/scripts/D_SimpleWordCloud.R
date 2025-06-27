@@ -92,7 +92,7 @@ wordcloud(topWordsA$word,
           colors       = pal,
           scale        = c(2,1))
 
-pdf('~/Desktop/GSERM_2024/personalFiles/exampleWC.pdf')
+pdf('~/Downloads/GSERM_2025/personalFiles/exampleWC.pdf')
 wordcloud(topWordsA$word,
           topWordsA$freq,
           max.words    = 50,
