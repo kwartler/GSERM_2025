@@ -1,0 +1,7 @@
+Simulation-based design optimization for statistical power: Utilizing machine learning.
+
+Citation
+Zimmer, F., & Debelak, R. (2025). Simulation-based design optimization for statistical power: Utilizing machine learning. Psychological Methods, 30(3), 513–536. https://doi.org/10.1037/met0000611
+
+Abstract
+The planning of adequately powered research designs increasingly goes beyond determining a suitable sample size. More challenging scenarios demand simultaneous tuning of multiple design parameter dimensions and can only be addressed using Monte Carlo simulation if no analytical approach is available. In addition, cost considerations, for example, in terms of monetary costs, are a relevant target for optimization. In this context, optimal design parameters can imply a desired level of power at minimum cost or maximum power at a cost threshold. We introduce a surrogate modeling framework based on machine learning predictions to solve these optimization tasks. In a simulation study, we demonstrate the efficiency for a wide range of hypothesis testing scenarios with single- and multidimensional design parameters, including t tests, analysis of variance, item response theory models, multilevel models, and multiple imputations. Our framework provides an algorithmic solution for optimizing study designs when no analytic power analysis is available, handling multiple design dimensions and cost considerations. Our implementation is publicly available in the R package mlpwr. (PsycInfo Database Record (c) 2025 APA, all rights reserved)

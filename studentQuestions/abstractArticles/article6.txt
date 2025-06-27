@@ -1,0 +1,7 @@
+Feasibility of EI-MAG, a working memory app, in younger and older adults.
+
+Citation
+Hischa, V., Oesterlen, E., & Seitz-Stein, K. (2022). Feasibility of EI-MAG, a working memory app, in younger and older adults. GeroPsych: The Journal of Gerontopsychology and Geriatric Psychiatry, 35(4), 202–210. https://doi.org/10.1024/1662-9647/a000282
+
+Abstract
+This study explored the feasibility of the German WM application EI-MAG in younger and, in a first attempt, older adults. Contrary to previous applications, EI-MAG is group-administrable and tablet-based. 89 older and 35 younger adults were administered six self-reliant WM tasks and given a questionnaire addressing sociodemographic background, health status, perceived app characteristics, and technology experience. The percentage of participants completing all tasks and subtest completion rates decreased across age groups. The feasibility in older adults was associated with chronic diseases, vision, dependence on hearing aids, touchscreen sensitivity, and ease with tapping and use. Results are discussed regarding the hindering factors for older adults identified in previous research. With the development of practice assessments, EI-MAG seems potentially suitable for use in older adults. (PsycInfo Database Record (c) 2022 APA, all rights reserved)
