@@ -66,6 +66,6 @@ txtTDMm <- as.matrix(txtTDM)
 # See the new shape
 txtTDMm[grep('marcus',colnames(txtDTMm)),5319:5322]
 
-# In this shape, we have a row of digits that represent the context the terms are used in.  Here its term contextualized by each document.  However, to learn the language characteristics, we have to build term row values not for documents but for all other words in our corpus.  This is called a Term Co-Occurence Matrix
+# In this shape, we have a row of digits that represent the context the terms are used in.  Here its term contextualized by each document.  However, to learn the language characteristics, we have to build term row values not for documents but for all other words in our corpus.  This is called a Term Co-Occurrence Matrix
 
 # End

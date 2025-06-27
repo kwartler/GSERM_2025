@@ -14,7 +14,7 @@
 reviews <- read.csv('https://raw.githubusercontent.com/kwartler/teaching-datasets/refs/heads/main/twoNeighborhoods_BOS_airbnb_reviews.csv')
 
 # Write a system prompt
-# Make a data packeet
+# Make a data packet
 # Make a POST request
 
 # See if you can perform your analysis on a single review first to make sure it works as intended
