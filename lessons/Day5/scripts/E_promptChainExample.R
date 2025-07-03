@@ -8,7 +8,7 @@ library(httr)
 library(jsonlite)
 
 # Input
-llmModel <- 'lmstudio-ai/gemma-2b-it-GGUF'
+llmModel <- 'llama-3.2-1b-instruct'
 headers <- c(`Content-Type` = "application/json")
 
 # Agents
@@ -40,6 +40,7 @@ functionalSpec <- httr::content(POres)$choices[[1]]$message$content
 # Programmer Agent
 programmeR <- LLMdata <- list(
   messages = list(
+    model = llmModel,
     list(role = "system", content = programmerSystem),
     list(role = "user", content = functionalSpec)
   ),
