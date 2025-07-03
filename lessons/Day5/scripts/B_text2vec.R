@@ -50,7 +50,7 @@ head(bosReviews$comments)
 # TM Cleaning workflow
 bosComments <- VCorpus(VectorSource(bosReviews$comments))
 bosComments <- cleanCorpus(bosComments, stops) #maybe 30sec
-bosComments <- sapply(bosComments, content)
+bosComments <- sapply(bosComments, NLP::content)
 
 # Now we begin the text to vector workflow
 iterMaker <- itoken(bosComments)

@@ -4,15 +4,18 @@ library(jsonlite)
 library(stringr)  
 
 # Inputs
-prompt <- "Write an R script to calculate the sum of numbers from 1 to 10 and print the result."
-# prompt <- "What is the capital of Brazil?"
-# prompt <- 'Write ggplot2 code to make a scatter plot of 100 random numbers.  The plot should have a title that says 100 random values.'
+#prompt <- "Write an R script to calculate the sum of numbers from 1 to 10 and print the result."
+#prompt <- "What is the capital of Brazil?"
+#prompt <- 'Write ggplot2 code to make a scatter plot of 100 random numbers.  The plot should have a title that says 100 random values.'
 prompt <- "Using the following text, write code to make a word cloud.  The text is: I love this course, it has been so hard but fun  I will bring this love of NLP back to my role for more fun."
 savePath <- '~/Desktop/GSERM_2025/personalFiles/'
 
 # LLM Names
 llmModel <- 'llama-3.2-1b-instruct' #small general purpose
-codingLLM <- 'qwen2.5-7b-instruct'  #"slow" but "smarter"        
+codingLLM <- 'qwen2.5-7b-instruct'  #"slow" but "smarter"     
+# According to reddit users, worth testing out: 
+# gemma3:1B is good at coding
+# gemma3 4B is good at multi0lingual   
 
 # LLM API Endpoint
 llmURL <- "http://localhost:1234/v1/chat/completions"
@@ -61,7 +64,7 @@ initialLLMResponse <- callLLM(modelName =llmModel ,
 # Now we classify the task 
 if(grepl('CODE_TASK:', initialLLMResponse)==T){
   cat('This looks like a coding task. I will ask the other LLM\n')
-  codingSysPrompt <- "You are an expert R programmer. Your task is to write a complete, runnable R script based on the user's request. Enclose the R code within a markdown code block (``` ... ```). Do not include any explanations or conversational text outside of the code block. Ensure the script is self-contained and complete.  The code will be run with source().  If there is a final output of the code it must be printed, or called to display the output."
+  codingSysPrompt <- "You are an expert R programmer. Your task is to write a complete, runnable R script based on the user's request. Enclose the R code within a markdown code block (``` ... ```). Do not include any explanations or conversational text outside of the code block. Ensure the script is self-contained and complete.  The code will be run with source().  DO NOT USE install.packages(), ONLY call library() when needed. If there is a final output of the code it must be printed, or called to display the output."
   
   # Call the coding LLM. Increase max_tokens as code can be lengthy.
   codingLLMResponse <- callLLM(modelName =codingLLM, 

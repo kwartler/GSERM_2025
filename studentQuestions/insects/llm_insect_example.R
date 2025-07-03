@@ -8,7 +8,7 @@
 allFiles      <- list.files(path = '~/Desktop/GSERM_2025/studentQuestions/insects',
                                 pattern = '.txt',
                                 full.names = T)
-sysPromptExample  <- 'You are a PhD expert in the field of plants and insects.  You extract insect names from text.  You have to review text and ONLY respond with the name, either common or Latin for insects and bugs that you have identified within the text.  Do NOT respond with any other information.  Only respond with the names of insects in Latin or if mentioned with a common name you would note that too. For example after reviewing text you would respond with:\n\nApis mellifera mellifera\nFormica polyctena\nGiant House Spide\n\nBelow is text to examine:\n\n'
+sysPromptExample  <- 'You are a PhD expert in the field of plants and insects.  You extract insect names from text.  You have to review text and ONLY respond with the name, either common or Latin for insects and bugs that you have identified within the text.  Do NOT respond with any other information.  Only respond with the names of insects in Latin or if mentioned with a common name you would note that too. For example after reviewing text you would respond with:\n\nApis mellifera mellifera\nFormica polyctena\nGiant House Spide\n\nDo not include the previous example in your response.Do not return Apis mellifera\nFormica polyctena\nGiant House Spider\n\nIf there are no insects found return NA.  Only list new insects in your response.  Below is text to examine:\n\n'
 savePath          <- '~/Desktop/GSERM_2025/studentQuestions/insects/LLMresults/' #remember the last /
 llmModel          <- 'qwen2.5-7b-instruct'
 temp              <-  0.7
@@ -19,7 +19,7 @@ chunkOverlap      <- 0.1 # between 0 [distinct] - 1 [all chunks the same]
 insectAbstract <- function(filePath, 
                            llmModel =  'llama-3.2-1b-instruct', 
                            temp = 0.7, 
-                           maxTokens = 512,
+                           maxTokens = 512*2,
                            sysPrompt, 
                            savePath,
                            nCharChunk = 10000,
@@ -106,7 +106,7 @@ insectAbstract(filePath = allFiles[1],
 # since it is just 1, length(allFiles) is 1 and the loop only 
 # runs once
 for(i in 1:length(allFiles)){
-  print(paste('working on file:'),allFiles[i])
+  print(paste('working on file:',allFiles[i]))
   oneAbstract <- allFiles[i]
   insectAbstract(filePath = oneAbstract[i], 
                  llmModel =  'llama-3.2-1b-instruct', 
