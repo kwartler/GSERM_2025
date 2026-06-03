@@ -1,12 +1,14 @@
 #' Query OpenRouter LLMs
 #'
 #' @param prompt Character string. The prompt to send to the model.
+#' @param system_prompt Character string. The system instructions to guide the model's behavior.
 #' @param model Character string. The OpenRouter model string. Defaults to a fast, cost-effective model.
 #' @param temperature Numeric. Controls randomness (0.0 to 2.0). Default is 0.7.
 #'
 #' @return A character string containing the model's response.
 #' @export
 query_openrouter <- function(prompt, 
+                             system_prompt = "You are a helpful AI assistant.",
                              model = "google/gemini-3.5-flash", 
                              temperature = 0.7) {
   
@@ -26,6 +28,7 @@ query_openrouter <- function(prompt,
     model = model,
     temperature = temperature,
     messages = list(
+      list(role = "system", content = system_prompt),
       list(role = "user", content = prompt)
     )
   )
@@ -38,8 +41,7 @@ query_openrouter <- function(prompt,
       `X-Title` = "Generative AI Class Practice"   # Names your app/course in the dashboard
     ) |>
     httr2::req_body_json(body_payload) |>
-    httr2::req_retry(max_tries = 3) #|> 
-    #httr2::req_verbose() #uncomment this and the preceeding |> to enable debugging
+    httr2::req_retry(max_tries = 3)
   
   # 5. Perform request and safely parse the nested JSON response
   tryCatch({
@@ -62,10 +64,21 @@ query_openrouter <- function(prompt,
   })
 } 
 
-# Execution Test using an updated active free model string
+# ==========================================
+# Execution Tests
+# ==========================================
+
+# Test 1: Using the default system prompt
 #creative_response <- query_openrouter(
 #  prompt = "List 3 common data cleaning steps for text data.",
 #  model = "google/gemini-3.5-flash",
 #  temperature = 0.2)
-#
 #cat(creative_response)
+
+# Test 2: Overriding the system prompt for a custom persona
+#pirate_response <- query_openrouter(
+#  prompt = "Explain what a standard error is.",
+#  system_prompt = "You are a data scientist who speaks like a 1600s pirate.",
+#  model = "google/gemini-3.5-flash",
+#  temperature = 0.5)
+#cat(pirate_response)
