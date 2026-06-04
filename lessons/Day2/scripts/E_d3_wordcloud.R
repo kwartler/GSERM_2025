@@ -9,7 +9,7 @@ filePath  <- 'https://raw.githubusercontent.com/kwartler/teaching-datasets/refs/
 
 # Libs
 library(tm)
-library(wordcloud2)
+#library(wordcloud2)
 library(RColorBrewer)
 library(echarts4r)
 library(dplyr)
@@ -70,21 +70,21 @@ txtFreq <- data.frame(word=names(txtSums),
 txtFreq <- txtFreq[order(txtFreq$frequency, decreasing = T),]
 
 # Regular dynamic WC, click the pop-out in the viewer
-wordcloud2(data = txtFreq[1:10,])
-?wordcloud2
+#wordcloud2(data = txtFreq[1:10,])
+#?wordcloud2
 
 # Choose a color & drop light ones
-pal <- brewer.pal(8, "Dark2")
-wordcloud2(txtFreq[1:50,],
-           color = pal,
-           backgroundColor = "lightgrey")
+#pal <- brewer.pal(8, "Dark2")
+#wordcloud2(txtFreq[1:50,],
+#           color = pal,
+#           backgroundColor = "lightgrey")
 
 # Some built in shapes need to click "show in new window"
 # 'circle', 'cardioid', 'diamond', 'triangle-forward', 'triangle', 'pentagon', & 'star'
-wordcloud2(txtFreq[1:50,],
-           shape = "diamond",
-           color = "blue",
-           backgroundColor = "pink")
+#wordcloud2(txtFreq[1:50,],
+#           shape = "diamond",
+#           color = "blue",
+#           backgroundColor = "pink")
 
 # Now let's use a more up to date package echarts4r
 txtFreq[1:50,] %>%

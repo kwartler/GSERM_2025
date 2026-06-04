@@ -59,7 +59,7 @@ text$Consumer.complaint.narrative <- complaintSubstitutions(text$Consumer.compla
 # Read in Data, clean & organize
 txtCorpus <- VCorpus(VectorSource(text$Consumer.complaint.narrative))
 txtCorpus <- cleanCorpus(txtCorpus, stops)
-txtDTMa    <- DocumentTermMatrix(txtCorpus)
+txtDTMa   <- DocumentTermMatrix(txtCorpus)
 txtDTMm   <- as.matrix(txtDTMa)
 
 # Frequency Data Frame

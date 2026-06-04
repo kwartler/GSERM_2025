@@ -151,7 +151,7 @@ plot(wordNetwork,
 
 # Make an interactive plot
 nodes <- data.frame(name = V(wordNetwork)$name, group = rep(1, length(V(wordNetwork))))
-edges <- get.data.frame(wordNetwork, what = "edges")
+edges <- as_data_frame(wordNetwork, what = "edges")
 links <- data.frame(source = match(edges$from, nodes$name) - 1, 
                     target = match(edges$to, nodes$name) - 1, 
                     value = 1)
