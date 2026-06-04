@@ -57,7 +57,7 @@ gsub('rt','', exampleTxt, ignore.case = T)
 gsub('^RT','' ,exampleTxt) #beginning-of-string anchor ^
 gsub('\\bRT\\b','' ,exampleTxt) # escaped "\b" #word boundary anchor, we can also use ignore.case = TRUE
 gsub('^RT I love the Statue of Liberty RT$', #^ beginning, $ ending with no variation
-     'I love the Stature of Liberty' ,
+     'I love the Statue of Liberty' ,
      exampleTxt) # this works if the entire string is to be subsituted exactly
 
 

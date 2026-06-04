@@ -99,8 +99,8 @@ ncol(diabetesDTM)
 
 # What are some impacting terms
 ## Updated versions of glmnet use s0 not s1 below
-head(bestTerms[order(bestTerms$s1, decreasing = T),])
-head(bestTerms[order(bestTerms$s1, decreasing = F),])
+head(bestTerms[order(bestTerms$lambda.1se, decreasing = T),])
+head(bestTerms[order(bestTerms$lambda.1se, decreasing = F),])
 
 # Make training predictions
 trainingPreds <- predict(textFit, diabetesDTM, type = 'class')

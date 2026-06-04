@@ -24,7 +24,9 @@ dropAmt <- tail(quantile(diamonds$priceClean, probs = seq(.1,.95, by = .05)), 1)
 diamonds <- subset(diamonds, diamonds$priceClean<dropAmt)
 
 # Build a scatter plot to show relationship 
-p <- ggplot(diamonds, aes(Carat, priceClean)) + geom_point(alpha=0.05) + theme_gdocs()
+p <- ggplot(diamonds, aes(Carat, priceClean)) + 
+  geom_point(alpha=0.05) + 
+  theme_gdocs()
 p
 
 # Since we see a relationship let's make a linear model to predict prices
