@@ -1,5 +1,6 @@
-# GSERM_2025
-GSERM St Gallen 2025 June
+# GSERM_2026
+GSERM St Gallen 2026 June
+*updated from 2025 lessons primarily moving from local LLM to API*
 
 ## Software requirements
 
@@ -53,3 +54,16 @@ Step 3.  Restart your R session and verify it is in the secure R environment fil
 ```
 Sys.getenv("OPENROUTER_API_KEY")
 ```
+
+Step 4. Testing the helper API function
+```
+devtools::source_url('https://raw.githubusercontent.com/kwartler/GSERM_2025/refs/heads/main/openRouter_function.R')
+
+
+tmp <- query_openrouter(prompt = 'Tell me about St. Gallen University.', 
+                        system_prompt = "You are a helpful AI assistant.",
+                        model = "google/gemini-3.5-flash", 
+                        temperature = 0.7)
+cat(tmp)
+```
+
