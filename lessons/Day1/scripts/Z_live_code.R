@@ -11,6 +11,7 @@
 
 # data
 text <- read.csv('https://raw.githubusercontent.com/kwartler/teaching-datasets/refs/heads/main/coffeeVector.csv')
+# Alternative https://raw.githubusercontent.com/kwartler/teaching-datasets/refs/heads/main/sivbVector.csv
 head(text)
 
 # Find the tweets that mention "mug"
