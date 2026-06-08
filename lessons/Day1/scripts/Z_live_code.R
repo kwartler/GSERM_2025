@@ -32,9 +32,10 @@ head(text)
 mugColumns
 
 # Review the first 6 rows and the index of "mug" previously created
-DTMmatrix[_:_,mugColumns]
+DTMmatrix[_:_,mugColumns:mugColumns+2]
 
 # Compare the 4th tweet in the original text to the content() of the 4th cleaned corpus doc
 
+# Find the most common word with a Word Frequency Matrix
 
 # End

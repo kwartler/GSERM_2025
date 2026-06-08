@@ -85,8 +85,6 @@ top_terms     <- names(sort(vis_term_freq, decreasing = TRUE)[1:top_n_terms])
 
 # Subset the DTM down to just these top visual terms
 networkDTM <- reducedDTM[, colnames(reducedDTM) %in% top_terms]
-# ==============================================================================
-
 
 # Convert our visual DTM into a Matrix and transpose (Rows = Terms, Cols = Docs)
 reducedDTMm <- t(as.matrix(networkDTM))
