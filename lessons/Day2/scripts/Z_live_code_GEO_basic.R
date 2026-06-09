@@ -16,7 +16,7 @@ topicSubject <- #'what is the best laptop to buy for a student?'
 modelLLM     <- 'openai/gpt-5-mini'#'deepseek/deepseek-v4-flash' #
 temperature  <- 0.7
 sysPrompt    <- 'You are a helpful AI assistant.  Be honest about brand recommendations.'
-nResponses   <- 50
+nResponses   <- 60
 
 # Test 
 tmp <- query_openrouter(prompt = topicSubject,
@@ -42,13 +42,13 @@ allResponsesDF <- gsub('\n','', allResponsesDF)
 
 allResponsesDF <- data.frame(doc_id = 1:nResponses,
                              text   = allResponsesDF,
-                             model  = modelLLM,
-                             date   = Sys.Date())
+                             model  = rep(modelLLM,nResponses),
+                             date   = rep(Sys.Date(), nResponses))
 
 # Save a copy just for class
-nam <- make.names('~/Desktop/GSERM_2025/lessons/Day2/',
-                  paste0(Sys.Date(),'_', modelLLM,'.csv'))
+nam <- make.names(paste0(Sys.Date(),'_', modelLLM,'.csv'))
 write.csv(allResponsesDF, nam, row.names = F)
+allResponsesDF <- read.csv('https://raw.githubusercontent.com/kwartler/GSERM_2025/refs/heads/main/lessons/Day2/X2026.06.09_openai.gpt.5.mini.csv')
 
 # Prepare corpus
 
