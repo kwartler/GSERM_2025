@@ -36,6 +36,23 @@ from PIL import Image
 RASTER_EXT = {"png", "jpg", "jpeg", "bmp", "tif", "tiff"}
 VIDEO_EXT = {"mp4", "mov", "m4v", "avi", "wmv"}
 
+# Stamp written into every media part we (re)encode. On later runs we recognize
+# our own output and pass it through untouched, so an image or video is only ever
+# compressed ONCE no matter how many times the deck is re-compressed. This is the
+# quality floor: it stops generation loss (each re-encode of an already-lossy
+# JPEG/H.264 compounds artifacts and softens the picture).
+MARKER = "cpptx1"
+
+
+def _is_marked_image(im):
+    """True if this image carries our compression stamp (JPEG COM or PNG text)."""
+    c = im.info.get("comment")
+    if isinstance(c, bytes):
+        c = c.decode("latin-1", "ignore")
+    if c and MARKER in c:
+        return True
+    return im.info.get("cpptx") == MARKER
+
 
 def has_real_alpha(im):
     """True only if the image has at least one non-opaque pixel."""
@@ -45,7 +62,7 @@ def has_real_alpha(im):
     return False
 
 
-def reencode_image(name, data, max_dim, jpeg_quality, log):
+def reencode_image(name, data, max_dim, jpeg_quality, bpp_floor, log):
     """Return (new_name, new_bytes). new_name differs only when png->jpeg."""
     ext = name.rsplit(".", 1)[-1].lower()
     if ext not in RASTER_EXT:
@@ -59,23 +76,45 @@ def reencode_image(name, data, max_dim, jpeg_quality, log):
 
     orig_size = len(data)
     w, h = im.size
+    needs_downscale = max(w, h) > max_dim
+    bpp = (orig_size * 8.0) / max(1, w * h)
 
-    # Downscale (only ever shrink) to bound the longest side.
-    if max(w, h) > max_dim:
+    # --- Quality floor: never recompress an already-compressed image. ---
+    # Re-encoding a lossy image compounds artifacts every pass. If the picture is
+    # already within the size bound and is either (a) stamped by a previous run,
+    # or (b) an already-lean JPEG (bits/pixel at or below the floor, i.e. it has
+    # clearly been compressed before), we copy its bytes through verbatim. That
+    # makes repeated runs idempotent and caps every image at a single
+    # compression. We only step in when there's real, non-destructive work to do
+    # (a resize, or a fat/uncompressed source).
+    if not needs_downscale:
+        if _is_marked_image(im):
+            log.append(f"    . {os.path.basename(name)}: already compressed (stamped); untouched")
+            return name, data
+        if ext in ("jpg", "jpeg") and bpp <= bpp_floor:
+            log.append(f"    . {os.path.basename(name)}: already-lean JPEG "
+                       f"({bpp:.2f} bpp <= {bpp_floor}); untouched")
+            return name, data
+
+    if needs_downscale:
         scale = max_dim / float(max(w, h))
         im = im.resize((max(1, int(w * scale)), max(1, int(h * scale))), Image.LANCZOS)
 
     alpha = has_real_alpha(im)
 
     if alpha:
-        # Keep transparency -> optimized PNG.
+        # Keep transparency -> optimized PNG, stamped via a text chunk.
+        from PIL import PngImagePlugin
+        meta = PngImagePlugin.PngInfo()
+        meta.add_text("cpptx", MARKER)
         buf = io.BytesIO()
-        im.save(buf, "PNG", optimize=True)
+        im.save(buf, "PNG", optimize=True, pnginfo=meta)
         new_name, new_bytes = name, buf.getvalue()
     else:
-        # Opaque -> JPEG.
+        # Opaque -> JPEG, stamped via the comment (COM) marker.
         buf = io.BytesIO()
-        im.convert("RGB").save(buf, "JPEG", quality=jpeg_quality, optimize=True, progressive=True)
+        im.convert("RGB").save(buf, "JPEG", quality=jpeg_quality, optimize=True,
+                               progressive=True, comment=MARKER.encode("ascii"))
         new_bytes = buf.getvalue()
         new_name = re.sub(r"\.(png|bmp|tif|tiff)$", ".jpeg", name, flags=re.I)
 
@@ -87,7 +126,7 @@ def reencode_image(name, data, max_dim, jpeg_quality, log):
         )
         return name, data
 
-    tag = "->jpeg" if new_name != name else "png"
+    tag = "->jpeg" if new_name != name else ("png" if alpha else "jpeg")
     log.append(
         f"    - {os.path.basename(name)} {orig_size//1024} KB -> "
         f"{len(new_bytes)//1024} KB ({tag}, {im.size[0]}x{im.size[1]})"
@@ -105,11 +144,23 @@ def reencode_video(name, data, fps, log):
         dst = os.path.join(tmpd, "out.mp4")
         with open(src, "wb") as f:
             f.write(data)
+        # Quality floor for video: a clip we already processed carries our stamp
+        # in its container metadata. Skip it so we don't re-encode H.264 again
+        # (which would soften motion and add blocking every pass).
+        if shutil.which("ffprobe"):
+            probe = subprocess.run(
+                ["ffprobe", "-v", "quiet", "-show_entries",
+                 "format_tags=comment", "-of", "default=nw=1:nk=1", src],
+                capture_output=True, text=True)
+            if MARKER in (probe.stdout or ""):
+                log.append(f"    . {os.path.basename(name)}: already compressed (stamped); untouched")
+                return data
         cmd = [
             "ffmpeg", "-y", "-i", src,
             "-r", str(fps),
             "-c:v", "libx264", "-crf", "26", "-preset", "slow",
             "-c:a", "aac", "-b:a", "64k",
+            "-metadata", f"comment={MARKER}",
             "-movflags", "+faststart",
             dst,
         ]
@@ -209,7 +260,7 @@ def apply_renames(parts, renames, log):
     log.append(f"  Renamed {len(renames)} part(s) png->jpeg (relationship targets updated)")
 
 
-def process(in_path, out_path, max_dim, jpeg_quality, video_fps, do_prune):
+def process(in_path, out_path, max_dim, jpeg_quality, video_fps, do_prune, bpp_floor):
     log = []
     with zipfile.ZipFile(in_path, "r") as z:
         names = z.namelist()
@@ -231,7 +282,7 @@ def process(in_path, out_path, max_dim, jpeg_quality, video_fps, do_prune):
         if ext in VIDEO_EXT:
             parts[name] = reencode_video(name, parts[name], video_fps, log)
             continue
-        new_name, new_bytes = reencode_image(name, parts[name], max_dim, jpeg_quality, log)
+        new_name, new_bytes = reencode_image(name, parts[name], max_dim, jpeg_quality, bpp_floor, log)
         if new_name != name:
             del parts[name]
             parts[new_name] = new_bytes
@@ -283,12 +334,15 @@ def main():
     ap.add_argument("--jpeg-quality", type=int, default=85)
     ap.add_argument("--video-fps", type=int, default=15)
     ap.add_argument("--no-prune-layouts", action="store_true")
+    ap.add_argument("--jpeg-bpp-floor", type=float, default=3.0,
+                    help="JPEGs already at or below this bits/pixel are treated as "
+                         "already-compressed and passed through untouched (quality floor).")
     args = ap.parse_args()
 
     before = os.path.getsize(args.input)
     print(f"== {os.path.basename(args.input)}  ({before/1e6:.1f} MB) ==")
     log = process(args.input, args.output, args.max_dim, args.jpeg_quality,
-                  args.video_fps, not args.no_prune_layouts)
+                  args.video_fps, not args.no_prune_layouts, args.jpeg_bpp_floor)
     for line in log:
         print(line)
     slides = validate(args.output)
