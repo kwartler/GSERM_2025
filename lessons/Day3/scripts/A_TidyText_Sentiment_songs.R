@@ -144,6 +144,17 @@ plotDF <- data.frame(labels = nrcSentRadar[,1],
                      row.names = NULL)
 plotDF
 
-# Chart
-chartJSRadar(scores = plotDF, labelSize = 10, showLegend = T)
+# Chart - older version
+# chartJSRadar(scores = plotDF, labelSize = 10, showLegend = T)
+# Echarts version
+plotDF |>
+  e_charts(labels) |>
+  e_radar(in_your_eyes.txt, max = 0.35, name = "In Your Eyes",
+          areaStyle = list(opacity = 0.3)) |>
+  e_radar(pharrell_williams_happy.txt, name = "Happy",
+          areaStyle = list(opacity = 0.3)) |>
+  e_radar(starboy.txt, name = "Starboy",
+          areaStyle = list(opacity = 0.3)) |>
+  e_tooltip(trigger = "item") |>
+  e_legend(bottom = 0)
 # End

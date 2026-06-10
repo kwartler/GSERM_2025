@@ -8,12 +8,13 @@
 library(tidytext)
 library(dplyr)
 library(tm)
-library(radarchart)
+#library(radarchart)
 library(textdata)
 library(ggplot2)
 library(tidyr)
 library(lubridate)
 library(syuzhet)
+library(echarts4r)
 
 # Data list.files()
 filePathA <- 'https://raw.githubusercontent.com/kwartler/teaching-datasets/refs/heads/main/goldmanSachs_2023_3k.csv'
@@ -189,7 +190,18 @@ plotDF <- full_join(aggGS, aggBar, by = 'sentiment')
 colnames(plotDF) <- c('sentiment','GoldmanCount','GoldmanProportion',
                       'BarclaysCount','BarclaysProportion')
 
-chartJSRadar(scores = plotDF[c(1,2,4)], labelSize = 10, showLegend = T)
-chartJSRadar(scores = plotDF[c(1,3,5)], labelSize = 10, showLegend = T) #in raw frequency some are different but as a proportion its basically the same, so it does make a difference to account for the proportion of the polarized words within a corpus.
+# Old version
+# chartJSRadar(scores = plotDF[c(1,2,4)], labelSize = 10, showLegend = T)
+# chartJSRadar(scores = plotDF[c(1,3,5)], labelSize = 10, showLegend = T) #in raw frequency some are different but as a proportion its basically the same, so it does make a difference to account for the proportion of the polarized words within a corpus.
+
+# Echarts version
+plotDF |>
+  e_charts(sentiment) |>
+  e_radar(GoldmanProportion, max = 0.35, name = "GoldmanProportion",
+          areaStyle = list(opacity = 0.3)) |>
+  e_radar(BarclaysProportion, name = "BarclaysProportion",
+          areaStyle = list(opacity = 0.3)) |>
+  e_tooltip(trigger = "item") |>
+  e_legend(bottom = 0)
 
 # End
