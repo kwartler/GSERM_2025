@@ -88,25 +88,25 @@ dim(wordVectors)
 head(rownames(wordVectors))
 wordVectors[1:6,1:10]
 
-# Look at a work
+# Look at a walking
 walking <- wordVectors['walk', , drop = F]
 walking
 
-# We can try to find a word analogy; drop=F keeps it as a matrix
-# New vector values are have the hyperspace location of a walk, removing context values for disappointed and adding in the context values for good, making a new location mixing these three elements
+# We can try to find a word analogy; drop=F keeps it as a matrix which is efficient in memory
+# New vector values have the hyperspace location of a walk, removing context values for disappointed and adding in the context values for good, making a new location mixing these three elements
 goodWalks <- wordVectors['walk', , drop = F] -
   wordVectors['disappointed', , drop = F] +
   wordVectors['good', , drop = F]
 goodWalks
 
-# With these new values we can use cosine similarity to find the closest related vector and its associated term; this fuinction calculates c("cosine", "jaccard") 
+# With these new values we can use cosine similarity to find the closest related vector and its associated term; this function calculates c("cosine", "jaccard") 
 # similarities
 similarGoodWalk <- sim2(x = wordVectors, 
                         y = goodWalks, 
                         method = "cosine")
 head(similarGoodWalk)
 similarGoodWalk <- similarGoodWalk[order(similarGoodWalk[,1], decreasing = T),]
-head(similarGoodWalk, 20)
+as.data.frame(head(similarGoodWalk, 20))
 
 # We can explore one more
 dirtySink <- wordVectors['sink', , drop = FALSE] -
@@ -118,6 +118,6 @@ similarDirtySink <- sim2(x = wordVectors,
                         norm = "l2")
 
 similarDirtySink <- similarDirtySink[order(similarDirtySink[,1], decreasing = T),]
-head(similarDirtySink, 25)
+as.data.frame(head(similarDirtySink, 25))
 
 # End
