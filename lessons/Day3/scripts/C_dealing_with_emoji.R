@@ -6,7 +6,7 @@
 
 # Libs
 library(tm) # displays the emojis correctly
-library(emoji) # Get the emoji lexicon or load one manually
+library(emoji) # Get the emoji lexicon or load one manually; some students have trouble installing so download the binary from https://cran.r-project.org/src/contrib/Archive/emoji/ and install locally, from among the older files.
 library(emojifont) # another emoji library to explore
 library(textclean) #another one!
 library(mgsub) #used for substitutions
