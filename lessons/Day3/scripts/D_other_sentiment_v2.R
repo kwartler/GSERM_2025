@@ -77,7 +77,7 @@ head(results)
 # Depending on the method you may want to aggregate up now
 neighborhoodResults <- results %>%
   group_by(fakeGrp) %>%
-  summarise_at(vars(SentimentLM), list(name = mean)) %>% as.data.frame()
+  summarise_at(vars(SentimentLM), list(avgSentLM = mean)) %>% as.data.frame()
 head(neighborhoodResults[order(neighborhoodResults$name, decreasing = T),],15)
 
 # End
