@@ -12,6 +12,7 @@ library(radarchart)
 library(textdata)
 library(ggplot2)
 library(tidyr)
+library(echarts4r)
 
 # Custom Functions
 tryTolower <- function(x){
