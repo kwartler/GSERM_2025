@@ -51,7 +51,7 @@ llmResponse <- httr::content(res)$choices[[1]]$message$content
 cat("--- Gemini Response ---\n", llmResponse, "\n\n")
 
 # Calculate the summarization quality metric using stringsim with Jaccard method
-jaccardSim <- stringsim(articleTxt, llmResponse, method = 'jaccard', q = 1)
+jaccardSim <- stringsim(articleTxt, llmResponse, method = 'jaccard', q = 1) #q-grams
 cat("Gemini 3.5 Jaccard Similarity:", jaccardSim, "\n\n")
 
 
