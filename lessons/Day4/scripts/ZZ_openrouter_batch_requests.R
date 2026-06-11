@@ -13,7 +13,7 @@ library(jsonlite)
 # ------------------------------------------------------------------------------
 # 1. Inputs & Configuration
 # ------------------------------------------------------------------------------
-docURL <- "https://raw.githubusercontent.com/kwartler/GSERM_2025/refs/heads/main/lessons/Day2/X2026.06.09_openai.gpt.5.mini.csv"
+docURL <- "https://github.com/kwartler/GSERM_2025/raw/refs/heads/main/TK_to_do/X2026.06.09_openai.gpt.5.mini.csv/X2026.06.09_openai.gpt.5.mini.csv"
 docs   <- read.csv(docURL, stringsAsFactors = FALSE)
 
 # Expecting columns: doc_id, text, model, date
