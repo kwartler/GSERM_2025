@@ -1,101 +1,94 @@
 #' Author: Ted Kwartler
-#' May 5
-#' An Agentic Workflow example
-#' Specialized Tasks
+#' June 10, 2026
+#' An Agentic Workflow example using OpenRouter
+#' A four-stage prompt chain that ends by BUILDING a runnable web app.
+#'
+#' Learning objectives:
+#'   1. Prompt chaining     - each stage's output feeds the next stage.
+#'   2. Prompt management    - system prompts live in external, versioned files.
+#'   3. Regression testing   - swap the prompt SET and measure the difference
+#'                             against the QC checklist. Same model, same chain,
+#'                             only the system prompts change.
+#' See systemPrompts/README.md for the exercise.
 
 # Libraries
-library(httr)
-library(jsonlite)
+library(httr2)
+
+# *** EDIT THESE *** Paths to YOUR copy of the GSERM_2025 repo.
+functionFile <- "~/Desktop/GSERM_2025/openRouter_function.R"
+promptPath   <- "~/Desktop/GSERM_2025/lessons/Day5/scripts/systemPrompts/"
+savePath     <- "~/Desktop/GSERM_2025/personalFiles/"   # gitignored; index.html saves here
+
+# Bring in the shared query_openrouter() helper
+source(functionFile)
+
+# *** THE A/B TOGGLE *** Flip between the two prompt sets and re-run to compare.
+promptSet <- "v1_naive"   # or "v1_naive" "v2_engineered"
 
 # Input
-llmModel <- 'llama-3.2-1b-instruct'
-headers <- c(`Content-Type` = "application/json")
+llmModel <- "google/gemini-3.1-flash-lite"
+#'openai/gpt-4o-mini-search-preview'
+#"openai/gpt-5-chat"
 
-# Agents
-productOwnerSystem   <- "You are a product owner writing a functional specification.  You write detailed specifications but no code."
-productOwnerTask <-  "Write a functional specification for an R function that accepts a number and divides it by Euler\'s number."
+# Generation settings (a full HTML file needs room, so allow more tokens)
+temp      <- 0.7
+maxTokens <- 2048
 
-programmerSystem <- 'You are an expert R programmer.  You are recieving a functional specification from the product owner.  You will write R code to accomplish the functional specification.'
+# Helper: read a system prompt for the CURRENT prompt set
+readPrompt <- function(fileName) {
+  paste(readLines(file.path(promptPath, promptSet, fileName), warn = FALSE),
+        collapse = "\n")
+}
 
-codeQCSystem <- 'You are an expert R programmer with code quality and writing tests.  Write a functional test for the R code below.'
+# System prompts: one per stage, from the selected set (see systemPrompts/README.md)
+productOwnerSystem    <- readPrompt("01_productOwner.txt")
+qcTestDesignerSystem  <- readPrompt("02_qcTestDesigner.txt")
+technicalWriterSystem <- readPrompt("03_technicalWriter.txt")
+programmerSystem      <- readPrompt("04_programmer.txt")
 
-technicalWriterSystem <- "You are technical writer.  Write a technical documentation for this function and its functional unit tests.  Describe the function technically with outside information and be specific."
+# The one brief that kicks off the chain (the request to the product owner)
+projectBrief <- "Build a single-page web application: a self-contained index.html chat client for the OpenRouter API. The user pastes their own OpenRouter API key, picks a model, types a prompt, clicks Send, and sees the model's response on the page."
 
+# STEP 1: Product Owner -> functional specification
+functionalSpec <- query_openrouter(prompt = projectBrief,
+                                    system_prompt = productOwnerSystem,
+                                    model = llmModel, temperature = temp,
+                                    max_tokens = maxTokens)
 
-# Product Owner Agent
-prodOwner <- list(model = llmModel,
-                messages = list(
-                  list(role = "system", content = productOwnerSystem),
-                  list(role = "user", content = productOwnerTask)),
-                temperature = 0.7,
-                max_tokens = 512,
-                stream = FALSE)
+# STEP 2: QC / Test Designer -> acceptance + regression checklist (from the spec)
+qcChecklist <- query_openrouter(prompt = functionalSpec,
+                                system_prompt = qcTestDesignerSystem,
+                                model = llmModel, temperature = temp,
+                                max_tokens = maxTokens)
 
-# PO Functional Spec Creation
-POres <- httr::POST(url = "http://localhost:1234/v1/chat/completions",
-                  httr::add_headers(.headers = headers),
-                  body = toJSON(prodOwner, auto_unbox = TRUE))
-functionalSpec <- httr::content(POres)$choices[[1]]$message$content
+# STEP 3: Technical Writer -> end-user docs (from the spec)
+userDocs <- query_openrouter(prompt = functionalSpec,
+                             system_prompt = technicalWriterSystem,
+                             model = llmModel, temperature = temp,
+                             max_tokens = maxTokens)
 
-# Programmer Agent
-programmeR <- LLMdata <- list(
-  messages = list(
-    model = llmModel,
-    list(role = "system", content = programmerSystem),
-    list(role = "user", content = functionalSpec)
-  ),
-  temperature = 0.7,
-  max_tokens = 512,
-  stream = FALSE
-)
+# STEP 4: Programmer -> the final index.html, synthesizing everyone's work
+teamContext <- paste("## FUNCTIONAL SPECIFICATION\n", functionalSpec,
+                     "\n\n## ACCEPTANCE / REGRESSION CHECKLIST\n", qcChecklist,
+                     "\n\n## USER DOCUMENTATION\n", userDocs,
+                     collapse = "\n")
+appHTML <- query_openrouter(prompt = teamContext,
+                            system_prompt = programmerSystem,
+                            model = llmModel, temperature = temp,
+                            max_tokens = maxTokens)
 
-# Programmer code
-progRes <- httr::POST(url = "http://localhost:1234/v1/chat/completions",
-                    httr::add_headers(.headers = headers),
-                    body = toJSON(programmeR, auto_unbox = TRUE))
-# Code Creation
-Rcode <- httr::content(progRes)$choices[[1]]$message$content
+# Defensive cleanup: strip any stray Markdown code fences a weak prompt may leave
+# in (the v1_naive set often does; the v2_engineered set should not). This is
+# itself a teaching point - look at the raw output to see the difference.
+cleanHTML <- gsub("```(html)?", "", appHTML)
 
-# Quality Control
-LLMqc <- list(
-  messages = list(
-    list(role = "system", content = codeQCSystem),
-    list(role = "user", content = Rcode)
-  ),
-  temperature = 0.7,
-  max_tokens = 512,
-  stream = FALSE
-)
+# Save the runnable app. Double-click this file to try it in a browser.
+indexFile <- file.path(savePath, "index.html")
+writeLines(cleanHTML, indexFile)
 
-# QC
-qcRes <- httr::POST(url = "http://localhost:1234/v1/chat/completions",
-                      httr::add_headers(.headers = headers),
-                      body = toJSON(LLMqc, auto_unbox = TRUE))
-
-# QC Test
-qcCode <- httr::content(qcRes)$choices[[1]]$message$content
-
-# Team Responses 
-teamEffort <- paste(c(functionalSpec, Rcode, qcCode), collapse ='\\nn')
-
-# technical documentation
-LLMdocs <- list(
-  messages = list(
-    list(role = "system", content = technicalWriterSystem),
-    list(role = "user", content = teamEffort)
-  ),
-  temperature = 0.7,
-  max_tokens = 512,
-  stream = FALSE
-)
-
-# PO Functional Spec Creation
-techDoc<- httr::POST(url = "http://localhost:1234/v1/chat/completions",
-                    httr::add_headers(.headers = headers),
-                    body = toJSON(LLMdocs, auto_unbox = TRUE))
-techDoc <- httr::content(techDoc)$choices[[1]]$message$content
-
-# Final output of all agents
-sapply(c(functionalSpec, Rcode, qcCode, techDoc), cat)
+# Show the whole team's work, then where the app landed
+sapply(c(functionalSpec, qcChecklist, userDocs, appHTML), cat)
+cat("\n\nSaved web app to:", normalizePath(indexFile), "\n")
+cat("Prompt set used:", promptSet, "\n")
 
 # End

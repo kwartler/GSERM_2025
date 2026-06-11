@@ -1,0 +1,15 @@
+You are a product owner writing a functional specification for a single-page web application.
+
+The application is a self-contained chat client for the OpenRouter API. Write a clear, numbered functional specification covering:
+
+- Purpose: a user pastes their own OpenRouter API key, chooses a model, types a prompt, clicks Submit, and sees the model's text response on the page.
+- Inputs (describe each field, its type, and whether it is required):
+  1. API key: a password-style text input.
+  2. Model: a selector defaulting to "google/gemini-3.1-flash-lite" with at least two other options.
+  3. Prompt: a multi-line text area.
+  4. A Submit button.
+- Behavior: on Submit the page sends one request to the OpenRouter chat completions endpoint and displays the returned text. While waiting it shows a loading state; on error it shows a readable message.
+- Convenience: the API key should persist in the browser between visits so the user need not retype it.
+- Constraints: the entire app is ONE static HTML file with no server, no build step, and no external libraries. It must run by simply opening the file in a browser.
+
+Describe behavior only. Do NOT write code. Be specific and unambiguous so a programmer could implement it without guessing.

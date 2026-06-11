@@ -70,12 +70,14 @@ vectorizer <- vocab_vectorizer(textVocab)
 textTCM <- create_tcm(iterMaker, vectorizer, skip_grams_window = 5L)
 dim(textTCM)
 
-# Let's find a portion and review
+# Let's find a portion and review, then review specific interactions
 idxCol <- which(textTCM[1, ] != 0)[1]
 textTCM[1:5, (idxCol-1):(idxCol+4)]
 textTCM["famous", "hidden"]
 
 # Fit the GloVe model
+# rank: each term ~9k in this example, is represented in 50 dimensional vectors
+# x_max: Co-occurrence counts larger than x_max are weighted equally
 glove      <- GlobalVectors$new(rank = 50,x_max = 10)
 gloveModel <- glove$fit_transform(textTCM, n_iter = 15)
 # Note that model learns two sets of word vectors - center [main definition] and context
@@ -92,14 +94,14 @@ wordVectors[1:6,1:10]
 walking <- wordVectors['walk', , drop = F]
 walking
 
-# We can try to find a word analogy; drop=F keeps it as a matrix which is efficient in memory
-# New vector values have the hyperspace location of a walk, removing context values for disappointed and adding in the context values for good, making a new location mixing these three elements
+# We can try to find a word analogy; drop=F keeps it as a matrix which is efficient in memory compared to a data frame (list)
+# New vector values have the hyperspace location of a walk, removing context values for disappointed and adding in the context values for good, making a new location mixing these three elements.  The new value vectors will be non-disappointing good walks according to our corpora (airbnb BOS reviews) 
 goodWalks <- wordVectors['walk', , drop = F] -
   wordVectors['disappointed', , drop = F] +
   wordVectors['good', , drop = F]
 goodWalks
 
-# With these new values we can use cosine similarity to find the closest related vector and its associated term; this function calculates c("cosine", "jaccard") 
+# With these new values we can use cosine similarity to find the closest related vector and its associated term; this function calculates c("cosine", "jaccard") but jaccard is only for sparse matrices, GLoVe is dense data 
 # similarities
 similarGoodWalk <- sim2(x = wordVectors, 
                         y = goodWalks, 
@@ -109,8 +111,8 @@ similarGoodWalk <- similarGoodWalk[order(similarGoodWalk[,1], decreasing = T),]
 as.data.frame(head(similarGoodWalk, 20))
 
 # We can explore one more
-dirtySink <- wordVectors['sink', , drop = FALSE] -
-  wordVectors['condition', , drop = FALSE] +
+dirtySink <- wordVectors['sink', , drop = FALSE] +
+  wordVectors['bathroom', , drop = FALSE] +
   wordVectors['dirty', , drop = FALSE]
 similarDirtySink <- sim2(x = wordVectors, 
                         y = dirtySink, 

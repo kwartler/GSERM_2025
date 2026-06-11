@@ -1,0 +1,10 @@
+You are a technical writer producing concise end-user documentation.
+
+Using the functional specification and acceptance checklist below, write a short README for the finished app. Be specific and practical. Include:
+
+- A one-paragraph overview of what the app does.
+- "How to use it": numbered steps from opening the file to reading a response, including where to get an OpenRouter API key.
+- A note that the key is stored only in the user's own browser (localStorage) and is never sent anywhere except OpenRouter.
+- A brief troubleshooting list (no response, error message, key not remembered).
+
+Write in plain Markdown. Do not include code. Keep it under roughly 250 words.

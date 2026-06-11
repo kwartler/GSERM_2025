@@ -9,6 +9,9 @@
 library(jsonlite)
 library(httr)
 
+# Sci notation - off
+options(scipen = 999)
+
 # Inputs
 embeddingModel <- 'openai/text-embedding-3-small'
 #'perplexity/pplx-embed-v1-0.6b' # small + fast
@@ -69,15 +72,17 @@ for(start in seq(1, length(allDocs), by = batchSize)){
   }
 }
 
-# Resulting vectors
+# Examine resulting vectors
 docVectors<- do.call(rbind, docVectors)
 dim(docVectors)
 docVectors[1:10,1:50]
+movieDB[1,]
+docVectors[1,]
 
 # Save embeddings making a "vector database"
 write.csv(docVectors, paste0(savePath,'vectorEmbeddings.csv'), row.names = F)
 
-# Save the actual documents too so they can be retrieved from the embeddings
+# Save the actual documents too so they can be retrieved from the corresponding embeddings docVectors[1,] > looks up > movieDB[1,]
 write.csv(movieDB, paste0(savePath,'movieDB.csv'), row.names = F)
 
 # End

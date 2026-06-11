@@ -10,6 +10,9 @@ library(jsonlite)
 library(httr)
 library(lsa) #calculate numeric cosine similarity
 
+# Sci notation - off
+options(scipen = 999)
+
 # Inputs
 llmModel <- 'google/gemini-3.1-flash-lite'
 embeddingModel <- 'openai/text-embedding-3-small' # must match the model used in C_basicVectors.R
@@ -44,13 +47,12 @@ baseLLM <- list(model = llmModel,
 baseRes <- httr::POST(url = "https://openrouter.ai/api/v1/chat/completions",
                       httr::add_headers(.headers = headers),
                       body = toJSON(baseLLM, auto_unbox = TRUE))
-cat('--- BASE MODEL (no RAG) ---\n')
 cat(httr::content(baseRes)$choices[[1]]$message$content)
 
 # STEP 2: Now do RAG. Read in our "vector database"
 docVectors <- read.csv(paste0(savePath,'vectorEmbeddings.csv'))
 
-# Now let's make a user request, turn it into embeddings first
+# Turn the user's prompt into a vector embedding from the same vector model first
 dataObj <- list(input = userPrompt, model = embeddingModel)
 
 # Convert the list to JSON
@@ -67,6 +69,9 @@ res <- httr::POST(
 userEmbeddings <- httr::content(res)$data
 userEmbeddings <- unlist(userEmbeddings[[1]]$embedding)
 
+# This is the vector representation of the user's prompt
+userEmbeddings
+
 # Now we have the user prompt as a vector and a "database" of document vectors
 # We can use cosine similarity to find the document vector closest to our user vector
 allSimilarities <- apply(docVectors, 1, lsa::cosine,userEmbeddings)
@@ -74,10 +79,13 @@ allSimilarities <- apply(docVectors, 1, lsa::cosine,userEmbeddings)
 # Reorder and grab the stop N document rows; we dont need the cosine sim scores
 # just the row positions
 idx <- order(allSimilarities, decreasing = TRUE)[1:topN]
+idx # these are the corresponding documents from the database we need to get
 
-# Get the appropriate documents; if we were using SQL or an actual DB we could make this more efficient
+# Get the appropriate documents; if we were using SQL or an actual DB we could make this more efficient by writing a query not reading in the entire table
 movies <- read.csv(paste0(savePath,'movieDB.csv'))
-relevantMovies <- movies[idx,]
+
+# This is where we get the top 3 documents that have a strong cosine sim to the user's prompt vector.
+relevantMovies <- movies[idx,] 
 
 # Some data manipulation to organize the data 
 # and keeping column names for all chunks so we dont confuse the llm
@@ -103,7 +111,6 @@ res <- httr::POST(url = "https://openrouter.ai/api/v1/chat/completions",
 
 # Extract the response
 llmResponse <- httr::content(res)$choices[[1]]$message$content
-cat('\n\n--- RAG MODEL (with retrieved movie) ---\n')
 cat(llmResponse)
 
 # End

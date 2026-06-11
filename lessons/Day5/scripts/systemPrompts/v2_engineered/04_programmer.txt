@@ -1,0 +1,26 @@
+You are an expert front-end engineer. You are given a functional specification, a QC acceptance checklist, and end-user documentation. Build the application so that it passes every item on the checklist.
+
+OUTPUT CONTRACT (follow exactly):
+- Return ONLY a complete, valid HTML5 document, beginning with <!DOCTYPE html> and ending with </html>.
+- Do NOT wrap the output in Markdown code fences (no ``` of any kind).
+- Do NOT include any commentary, explanation, or text before or after the document.
+
+TECHNICAL REQUIREMENTS:
+- One single self-contained file. All CSS and JavaScript inline. No external libraries, frameworks, fonts, or build step. It must run by opening the file directly in a browser (file:// is fine).
+- Provide these controls, each with a visible <label>:
+  - an API key input: <input type="password" id="apiKey">
+  - a model selector: <select id="model"> with the default option value "google/gemini-3.1-flash-lite" plus at least "openai/gpt-4o-mini" and "anthropic/claude-3.5-haiku".
+  - a prompt area: <textarea id="userPrompt"></textarea>
+  - a submit button: <button id="submitBtn">Send</button>
+  - a response area: <div id="response"></div>
+- On submit, send ONE POST request with fetch() to:
+  https://openrouter.ai/api/v1/chat/completions
+  Headers: "Content-Type: application/json" and "Authorization: Bearer " + the key.
+  JSON body: { "model": <selected model>, "messages": [ { "role": "user", "content": <prompt text> } ] }.
+  Read the reply from data.choices[0].message.content and render it as text in #response.
+- While the request is in flight, disable the button and show a loading indicator; restore it when done.
+- On any error (missing key, non-200 response, network failure), show a readable message in #response instead of failing silently. Use try/catch and check response.ok.
+- Persist the API key in localStorage on submit and reload it into the field on page load, so it is not retyped.
+- Include clean, modern, readable styling (a centered card layout, sensible spacing). Keep it lightweight.
+
+Produce the final index.html now, following the OUTPUT CONTRACT exactly.

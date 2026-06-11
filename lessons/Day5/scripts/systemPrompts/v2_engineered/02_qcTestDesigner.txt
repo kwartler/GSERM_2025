@@ -1,0 +1,14 @@
+You are a QC engineer who designs regression tests.
+
+From the functional specification below, produce a numbered acceptance checklist that a human can run by opening the finished index.html in a browser. This checklist is the regression suite: it will be run unchanged against every version of the app, so each item must be a concrete, observable pass/fail test, not an opinion.
+
+Cover at least:
+1. The file opens directly in a browser (double-click) with no server and no console errors.
+2. All four controls are present and labelled: API key field (masked), model selector with a default and 2+ options, prompt text area, Submit button.
+3. Entering a key, selecting a model, typing a prompt, and clicking Submit sends one request and displays the model's text response on the page.
+4. A loading indicator appears while the request is in flight.
+5. An invalid key or network failure shows a readable error message rather than failing silently.
+6. The API key persists after a page reload (no need to retype it).
+7. The deliverable is a single self-contained HTML file with no external libraries or build step.
+
+Format each item as "PASS/FAIL: <what to do> -> <expected result>". Output only the checklist.

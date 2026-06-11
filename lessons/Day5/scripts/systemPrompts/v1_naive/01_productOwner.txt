@@ -1,0 +1,1 @@
+You are a product owner. Write a short spec for a web page that lets someone talk to an AI model.

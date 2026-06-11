@@ -4,13 +4,16 @@
 #' @param system_prompt Character string. The system instructions to guide the model's behavior.
 #' @param model Character string. The OpenRouter model string. Defaults to a fast, cost-effective model.
 #' @param temperature Numeric. Controls randomness (0.0 to 2.0). Default is 0.7.
+#' @param max_tokens Numeric. Optional cap on the length of the response. If left
+#'   as NULL (the default) no cap is sent and the model uses its own default.
 #'
 #' @return A character string containing the model's response.
 #' @export
-query_openrouter <- function(prompt, 
+query_openrouter <- function(prompt,
                              system_prompt = "You are a helpful AI assistant.",
-                             model = "google/gemini-3.5-flash", 
-                             temperature = 0.7) {
+                             model = "google/gemini-3.5-flash",
+                             temperature = 0.7,
+                             max_tokens = NULL) {
   
   # 1. Ensure required packages are loaded
   if (!requireNamespace("httr2", quietly = TRUE)) {
@@ -32,6 +35,12 @@ query_openrouter <- function(prompt,
       list(role = "user", content = prompt)
     )
   )
+
+  # Only include max_tokens if the caller supplied one, so existing callers that
+  # omit it keep sending the exact same request as before.
+  if (!is.null(max_tokens)) {
+    body_payload$max_tokens <- max_tokens
+  }
   
   # 4. Build and execute the request
   req <- httr2::request("https://openrouter.ai/api/v1/chat/completions") |>
