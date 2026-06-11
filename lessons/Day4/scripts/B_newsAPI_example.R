@@ -32,7 +32,7 @@ apiResponse$totalResults
 str(apiResponse)
 
 # One article
-apiResponse$articles[1,]
+apiResponse$articles[2,]
 
 
 # End
