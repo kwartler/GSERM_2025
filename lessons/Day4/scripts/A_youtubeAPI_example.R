@@ -14,7 +14,7 @@ library(plyr)
 # Youtube URL
 # https://www.youtube.com/watch?v=K5Rly83zfuI&ab_channel=TheDailyShowwithTrevorNoah
 # https://www.youtube.com/watch?v=sal78ACtGTc&ab_channel=SequoiaCapital
-youtubeCaption <- 'https://www.youtube.com/api/timedtext?v=K5Rly83zfuI&ei=ypEpaoGGCtWup-oPsZO52As&caps=asr&opi=112496729&exp=xpe&xoaf=4&xowf=1&hl=en&ip=0.0.0.0&ipbits=0&expire=1781134394&sparams=ip%2Cipbits%2Cexpire%2Cv%2Cei%2Ccaps%2Copi%2Cexp%2Cxoaf&signature=58D39C43821C9245FCAC9FE75484EF7B0D5205AD.D9326206FFABDEAE06C2B26B645CE82D17799841&key=yt8&lang=en-US&potc=1&pot=MljyTyYT_hJX8PIOYSgD6dKmjFfXepjHQ5zFjRSQ597hJGG4DriCX8HaSIny8Ans1H0mAy-uYB4KJW4ZGcoMKUjJfys3U5KmSigg4xXHve0K78n5CwpLmBbh&fmt=json3&xorb=2&xobt=3&xovt=3&cbrand=apple&cbr=Chrome&cbrver=148.0.0.0&c=WEB&cver=2.20260606.02.00&cplayer=UNIPLAYER&cos=Macintosh&cosver=10_15_7&cplatform=DESKTOP'
+youtubeCaption <- 'https://www.youtube.com/api/timedtext?v=K5Rly83zfuI&ei=D20qav3TCsncmLAPo9qcsQo&caps=asr&opi=112496729&exp=xpe&xoaf=4&xowf=1&hl=en&ip=0.0.0.0&ipbits=0&expire=1781190527&sparams=ip%2Cipbits%2Cexpire%2Cv%2Cei%2Ccaps%2Copi%2Cexp%2Cxoaf&signature=4FABCAE41F840F264D44BF9D84B168D2A8A73CF2.67B7B1E609FA3404511D29A4805DE8DC560EEDD6&key=yt8&lang=en-US&potc=1&pot=MlM3qvwfsr-lDTeW5EJrNCq7Z1BTZdbfqjy_EUJQBGEOpEILHv-ZtY0Ly4F-56ZQzTqjfINbDzIhKVQ6f5rPoOLLcN3Cw7MYcyHvIn2nfYwtfS7vmQ%3D%3D&fmt=json3&xorb=2&xobt=3&xovt=3&cbrand=apple&cbr=Chrome&cbrver=148.0.0.0&c=WEB&cver=2.20260606.02.00&cplayer=UNIPLAYER&cos=Macintosh&cosver=10_15_7&cplatform=DESKTOP'
 
 # Go get the data
 dat <- fromJSON(youtubeCaption) # you can even pass in a URL to go to a webpage
