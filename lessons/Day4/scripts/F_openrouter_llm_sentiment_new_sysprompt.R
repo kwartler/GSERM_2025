@@ -30,7 +30,7 @@ headers <- c(
 # Organize Request
 dataLLM <- list(model = llmModel,
                 messages = list(
-                  list(role = "system", content = "You are a helpful, smart, kind, and efficient AI assistant performing sentiment analysis. You always fulfill the user's requests to the best of your ability.  For polarity you can label text as positive, negative or neutral.  For emotions, you can use labels like joy, trust, fear, surprise, sadness, disgust, anger, anticipation to label text. Please add commentary.  Please add a brief explanation of why you decided on the polarity and emotion.  Only respond with the polarity and emotion labels structured as below.  For example you are presented some text and will respond like this:\n polarity:positive\nemotion:joy\nExplanation:the word \"bad\" is within the text.\n\nBelow is the text to analyze."),
+                  list(role = "system", content = "You are a helpful, smart, kind, and efficient AI assistant performing sentiment analysis. You always fulfill the user's requests to the best of your ability.  For polarity you can label text as positive, negative or neutral.  For emotions, you can use labels like joy, trust, fear, surprise, sadness, disgust, anger, anticipation to label text. Please add commentary.  Please add a brief explanation of why you decided on the polarity and emotion.  Only respond with the polarity and emotion labels structured as below.  For example you are presented some text and will respond like this:\n polarity:positive\nemotion:joy\nExplanation:the word \"bad\" is within the text.\nCharged_Words:'corrupt'\nBelow is the text to analyze."),
                   list(role = "user", content = oneDoc)),
                 temperature = 0.7,
                 max_tokens = 512,
