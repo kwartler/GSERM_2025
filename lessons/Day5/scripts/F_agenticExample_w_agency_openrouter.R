@@ -53,6 +53,11 @@ if(grepl('CODE_TASK:', initialLLMResponse)==T){
                           "\n\nPRODUCT MANAGER SPECIFICATION:\n",
                           initialLLMResponse)
 
+  # Show students the exact handoff: the literal text is now included
+  cat('\n--- HANDOFF TO CODING AGENT ---\n')
+  cat(codingRequest)
+  cat('\n-------------------------------\n')
+
   codingLLMResponse <- query_openrouter(prompt = codingRequest,
                                         system_prompt = codingSysPrompt,
                                         model = codingLLM,
