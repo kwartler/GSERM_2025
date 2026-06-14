@@ -4,5 +4,8 @@
 .Ruserdata
 *.DS_Store
 
+# Microsoft Office transient/owner lock files (~$ prefix)
+~$*
+
 # Add personal file folder
 personalFiles/
