@@ -23,7 +23,7 @@ savePath     <- "~/Desktop/GSERM_2025/personalFiles/"   # gitignored; index.html
 source(functionFile)
 
 # *** THE A/B TOGGLE *** Flip between the two prompt sets and re-run to compare.
-promptSet <- "v1_naive"   # or "v1_naive" "v2_engineered"
+promptSet <- "v2_engineered"   # or "v1_naive" "v2_engineered"
 
 # Input
 llmModel <- "google/gemini-3.1-flash-lite"

@@ -23,7 +23,7 @@ savePath <- '~/Desktop/GSERM_2025/personalFiles/'
 
 # LLM Names (OpenRouter model ids)
 llmModel  <- 'google/gemini-3.1-flash-lite' # small, fast, cheap general purpose "PM"
-codingLLM <- 'google/gemini-3.5-flash'      # "slower" but "smarter" specialist
+codingLLM <- 'anthropic/claude-opus-4.8'      # "slower" but "smarter" specialist
 # Tip: you can swap codingLLM for a dedicated coder, e.g. 'qwen/qwen-2.5-coder-32b-instruct'
 
 ###
